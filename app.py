@@ -2,8 +2,19 @@ from flask import Flask, session, request, redirect, url_for, render_template
 import secrets
 
 
+
+
+
+
+
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(8)
+
+users = {
+            "aruna"  : "Sivagangai",
+            "steve"  : "Coimbatore"
+            }
+
 
 @app.route('/', methods =['GET','POST'])
 def home():
@@ -11,34 +22,34 @@ def home():
         return render_template("welcome.html")
 
 @app.route('/profile')
-def profile():
-    if "name" in session: 
-        user = {
-            "name"  : session.get("name"),
-            "age"   : session.get("age"),
-            "city"  : session.get("city")
-               }
-        
-        return render_template('profile.html', user = user)
-    
-    
+def profile(): 
+    if "user_name" in session :
+       
+        user_name = session.get("user_name")
+        if user_name in users:
+            users={
+                "name" :user_name, 
+                "city"  : users[user_name]
+            }
+        return render_template('profile.html', user_name = users )
     return redirect (url_for("login"))
+       
 
 @app.route('/login', methods = ['GET','POST'])
 def login():
     if request.method == "POST":
-        name = request.values.get("name")
-        age  = request.values.get("age")
-        city = request.values.get("city")
+        user_name = request.values.get("user_name")
+        if user_name in users:
 
-        session['name'] = name
-        session['age']  = age
-        session['city'] = city
+            session['name'] = user_name
+        
          
-        print(f"session : {session}")
-        return redirect(url_for("profile"))
-    else:
-        return render_template('login.html')
+            print(f"session : {session}")
+            return redirect(url_for("profile"))
+        else:
+            error = "invalid user_name"
+               
+    return render_template('login.html', error= error)
 
 @app.route('/logout')
 def session_logout():

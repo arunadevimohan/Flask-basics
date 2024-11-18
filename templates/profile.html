@@ -9,10 +9,9 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-        <h1> user name : {{user.name}}</h1><br>
-        <h1> user age  : {{user.age}}</h1><br>
-        <h1> user city : {{user.city}}</h1><br>
-        <a href = "/logout"   >logout</a> 
+        <h1> hi {{user_name.name}}, you are from {{user_name.city}}</h1><br>
+        
+        <a href ="{{url_for('logout')}}"  >logout</a> 
         
     </body>
 </html>
