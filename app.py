@@ -5,40 +5,45 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(8)
 
 users = {
-            "aruna"  : "Sivagangai",
-            "steve"  : "Coimbatore"
-            }
+    "aruna"  : "Sivagangai",
+    "steve"  :  "Coimbatore"
+}
 
 
-@app.route('/', methods =['GET','POST'])
+@app.route('/')
 def home():
-    
-        return render_template("welcome.html")
+    return render_template("welcome.html")
 
 @app.route('/profile')
 def profile(): 
-    if "user_name" in session :
-        user_name = session.get("user_name")
-        if user_name in users:
-            users={
-                "name" :user_name, 
-                "city"  : users[user_name]
+    if "username" in session :
+        username = session.get("username")
+        if username in user:
+            user ={
+                "name" :username, 
+                "city"  : users[username]
             }
-    return render_template('profile.html', user_name = users )
-    #return redirect (url_for("login"))
+            return render_template('profile.html', username=user )
+        
+        
+        return render_template('profile.html')
+   
+    return redirect (url_for("login"))
        
 
 @app.route('/login', methods = ['GET','POST'])
 def login():
     if request.method == "POST":
-        user_name = request.values.get("user_name")
-        print(f"name:{user_name}")
-        if user_name in users:
-            session['name'] = user_name
+        username = request.values.get("username")
+        print(f"username:{username}")
+        if username in users:
+            session['username'] = username
             print(f"session : {session}")
             return redirect(url_for("profile"))
+        else:
+            return "invalid username"
     return render_template('login.html')
-    #else:
+        #else:
             #return "invalid user_name"
         
 
